@@ -12,6 +12,10 @@ export class UserService {
     return userRepository.getUserById(id);
   }
 
+  async login(email: string, password: string) {
+    return userRepository.login(email, password );
+  }
+
   async getAllUsers() {
     return userRepository.getAllUsers();
   }
@@ -24,4 +28,6 @@ export class UserService {
   async deleteUser(id: number) {
     return userRepository.deleteUser(id);
   }
+    
+
 }

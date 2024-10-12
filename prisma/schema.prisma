@@ -14,10 +14,14 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String
-  password String
+  id       Int    @id @default(autoincrement()) // Auto-incrementing primary key
+  email    String @unique                       // Unique email field
+  password String                               // Password field
+  firstname String?                            // Optional first name field
+  lastname  String?                            // Optional last name field
+  address   String?                            // Optional address field
+  hometown  String?                            // Optional hometown field
+  // Add other fields as necessary
 }
 
 model Item {

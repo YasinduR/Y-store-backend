@@ -14,6 +14,26 @@ export class UserController {
     }
   }
 
+  async Login(req: Request, res: Response) { 
+    try {
+      const { email, password } = req.body;
+      const user = await userService.login( email, password);
+      // Exclude the password field from the user object
+      if(user){
+        const { password, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
+      }
+      else{
+       res.status(401).json({ error: 'Invalid email or password' });
+        
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while login.' });
+    }
+  }
+
+  
+
   async getUserById(req: Request, res: Response) {
     try {
       const { id } = req.params;

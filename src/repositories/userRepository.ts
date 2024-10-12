@@ -13,7 +13,23 @@ export class UserRepository {
     return prisma.user.findUnique({
       where: { id },
     });
+
+    
   }
+
+  async login(email: string, password: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+  
+    // Check if user exists and the password matches
+    if (user && user.password === password) {
+      return user;
+    }
+  
+    return null; // Return null if no user found or password doesn't match
+  }
+
 
   async getAllUsers(): Promise<User[]> {
     return prisma.user.findMany();
