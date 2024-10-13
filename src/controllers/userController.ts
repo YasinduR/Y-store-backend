@@ -14,6 +14,24 @@ export class UserController {
     }
   }
 
+  async Updateitemcount(req: Request, res: Response) {  // update item count in cart
+    try {
+      const { id, itemid,itemcount } = req.body;
+      const user = await userService.getUserById(Number(id));
+      // Exclude the password field from the user object
+      if(user){
+        const user_ = await userService.updatecart(user.id,itemid,itemcount)
+        const { password, ...userWithoutPassword } = user_;
+        res.json(userWithoutPassword);
+      }
+      else{
+       res.status(401).json({ error: 'Invalid email or password' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while login.' });
+    }
+  }
+
   async Login(req: Request, res: Response) { 
     try {
       const { email, password } = req.body;
@@ -31,8 +49,6 @@ export class UserController {
       res.status(500).json({ error: 'An error occurred while login.' });
     }
   }
-
-  
 
   async getUserById(req: Request, res: Response) {
     try {

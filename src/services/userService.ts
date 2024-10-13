@@ -20,6 +20,10 @@ export class UserService {
     return userRepository.getAllUsers();
   }
 
+  async updatecart(id: number, itemid: number, itemcount: number ){ //UPDATE CART
+    return userRepository.updatecart(id,itemid,itemcount);
+  }
+
   async updateUser(id: number, name?: string, email?: string, password?: string) {
     // You might want to hash the password here
     return userRepository.updateUser(id, { name, email, password });

@@ -21,6 +21,7 @@ model User {
   lastname  String?                            // Optional last name field
   address   String?                            // Optional address field
   hometown  String?                            // Optional hometown field
+  cart      Json?
   // Add other fields as necessary
 }
 
