@@ -6,9 +6,17 @@ const userService = new UserService();
 export class UserController {
   async createUser(req: Request, res: Response) {
     try {
-      const { name, email, password } = req.body;
-      const user = await userService.createUser(name, email, password);
-      res.status(201).json(user);
+      const { firstname,lastname,address,hometown, email, password } = req.body;
+      const user = await userService.createUser(firstname,lastname,address,hometown, email, password);
+      if(user){
+        const { password, ...userWithoutPassword } = user;
+        res.status(201).json(userWithoutPassword);
+      }
+      else{
+        res.status(409).json("Email already exists");
+
+      }
+      
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while creating the user.' });
     }
@@ -16,21 +24,31 @@ export class UserController {
 
   async Updateitemcount(req: Request, res: Response) {  // update item count in cart
     try {
+      console.log(req.body);
       const { id, itemid,itemcount } = req.body;
+      
       const user = await userService.getUserById(Number(id));
       // Exclude the password field from the user object
       if(user){
         const user_ = await userService.updatecart(user.id,itemid,itemcount)
-        const { password, ...userWithoutPassword } = user_;
-        res.json(userWithoutPassword);
+        if (!user_){
+          res.status(401).json({ error: 'Invalid Product ID' });
+        }
+        else{
+          const { password, ...userWithoutPassword } = user_;
+          res.json(userWithoutPassword);
+        }
       }
       else{
-       res.status(401).json({ error: 'Invalid email or password' });
+       res.status(401).json({ error: 'Invalid User ID' });
       }
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while login.' });
     }
   }
+
+  async resetcart(){
+    }//
 
   async Login(req: Request, res: Response) { 
     try {
@@ -43,7 +61,6 @@ export class UserController {
       }
       else{
        res.status(401).json({ error: 'Invalid email or password' });
-        
       }
     } catch (error) {
       res.status(500).json({ error: 'An error occurred while login.' });
@@ -55,7 +72,8 @@ export class UserController {
       const { id } = req.params;
       const user = await userService.getUserById(Number(id));
       if (user) {
-        res.json(user);
+        const { password, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
       } else {
         res.status(404).json({ error: 'User not found.' });
       }

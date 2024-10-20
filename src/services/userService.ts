@@ -3,9 +3,15 @@ import { UserRepository } from "../repositories/userRepository";
 const userRepository = new UserRepository();
 
 export class UserService {
-  async createUser(name: string, email: string, password: string) {
-    // You might want to hash the password here
-    return userRepository.createUser({ name, email, password });
+  async createUser(firstname: string, lastname: string, address: string,hometown: string, email: string, password: string) {
+    return userRepository.createUser({
+      firstname,
+      lastname,
+      address,
+      hometown,
+      email,
+      password, // Ensure password is hashed if required
+    });
   }
 
   async getUserById(id: number) {

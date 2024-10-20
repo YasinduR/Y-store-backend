@@ -1,9 +1,22 @@
-import { Prisma, PrismaClient, User } from '@prisma/client';
+import { Prisma, PrismaClient, User,Item } from '@prisma/client';
+
 
 const prisma = new PrismaClient();
 
 export class UserRepository {
-  async createUser(data: { name: string; email: string; password: string }): Promise<User> {
+  async createUser(data: { firstname: string; lastname: string; address: string; hometown: string ;email: string; password: string  }): Promise<User | null> {
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+  
+    if (existingUser) {
+      // Email already exists, return null or throw an error
+      console.log("Email already exists");
+      return null;
+    }
+  
+    // If email doesn't exist, create a new user
     return prisma.user.create({
       data,
     });
@@ -17,7 +30,14 @@ export class UserRepository {
   }
 
   async updatecart(id: number,  itemid: number, itemcount: number ) {
-    // Fetch the current cart of the user
+    
+    const product = await prisma.item.findUnique({
+      where: { id: itemid}
+      
+    }); 
+    // Update only if valid product ID
+    if(product){
+      // Fetch the current cart of the user
     const user = await prisma.user.findUnique({
       where: { id }
     });
@@ -33,6 +53,7 @@ export class UserRepository {
       if (itemIndex > -1) {
         // Item exists, replace it with the new one
         updatedCart[itemIndex] = newItem;
+
       } else {
         // Item does not exist, add it to the cart
         updatedCart.push(newItem);
@@ -42,13 +63,20 @@ export class UserRepository {
       // If no cart exists, start a new one with the new item
       updatedCart = [newItem];
     }
+    
+    updatedCart = updatedCart.filter(item => item.itemcount >= 1 && Number.isInteger(item.itemcount));
+    // Maintain positive integers as itemcount in the cart
+    
     // Update the user's cart with the updated items
     return prisma.user.update({
       where: { id },
       data: {
         cart: updatedCart,
       },
-    });
+    });}
+    else{
+      return null;
+    }
   }
 
   async login(email: string, password: string): Promise<User | null> {
