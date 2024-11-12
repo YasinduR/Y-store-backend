@@ -32,4 +32,5 @@ model Item {
   stock         Int
   price         Float
   special_price Float
+  images        String[]
 }

@@ -47,6 +47,31 @@ export class UserController {
     }
   }
 
+  async removeItemsFromCart(req: Request, res: Response) {  // update item count in cart
+    try {
+      console.log(req.body);
+      const { id, itemids} = req.body;
+      
+      const user = await userService.getUserById(Number(id));
+      // Exclude the password field from the user object
+      if(user){
+        const user_ = await userService.removeItemsFromCart(user.id,itemids)
+        if (!user_){
+          res.status(401).json({ error: 'Invalid Itemids' });
+        }
+        else{
+          const { password, ...userWithoutPassword } = user_;
+          res.json(userWithoutPassword);
+        }
+      }
+      else{
+       res.status(401).json({ error: 'Invalid User ID' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while updating.' });
+    }
+  }
+
   async resetcart(){
     }//
 
@@ -111,4 +136,5 @@ export class UserController {
       res.status(500).json({ error: 'An error occurred while deleting the user.' });
     }
   }
+  
 }

@@ -10,6 +10,7 @@ router.post('/users/cart', userController.Updateitemcount);
 router.get('/users/:id', userController.getUserById);
 router.get('/users', userController.getAllUsers);
 router.put('/users/:id', userController.updateUser);
-router.delete('/users/:id', userController.deleteUser);
+router.put('/users/cart', userController.deleteUser);
+router.put('/users/cart/removeitems', userController.removeItemsFromCart);
 
 export default router;

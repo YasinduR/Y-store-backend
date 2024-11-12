@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export class ItemRepository {
 
 //Create
-  async createItem(data: { name: string; description: string;stock:number; price: number;special_price:number}): Promise<Item> {
+  async createItem(data: { name: string; description: string;stock:number; price: number;special_price:number,images:string[]}): Promise<Item> {
    return prisma.item.create({ 
     data,
   });
@@ -24,7 +24,7 @@ export class ItemRepository {
   }
 
 //Update
-  async updateItem(id: number, data: Partial<{ name: string; description: string;stock:number; price: number;special_price:number}>): Promise<Item> {
+  async updateItem(id: number, data: Partial<{ name: string; description: string;stock:number; price: number;special_price:number,images:string[]}>): Promise<Item> {
     return prisma.item.update({
       where: { id },
       data,

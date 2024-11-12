@@ -14,6 +14,9 @@ export class UserService {
     });
   }
 
+  async removeItemsFromCart(id: number, itemIds: number[]){
+    return userRepository.removeItemsFromCart(id,itemIds);
+  }
   async getUserById(id: number) {
     return userRepository.getUserById(id);
   }

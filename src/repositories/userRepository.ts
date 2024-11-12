@@ -29,6 +29,33 @@ export class UserRepository {
 
   }
 
+  async removeItemsFromCart(id: number, itemIds: number[]) { // Remove Items from usercarts after succsessfull purchase
+
+    const user = await prisma.user.findUnique({
+      where: { id }
+    });
+  
+    if (user && user.cart) {
+      // Copy the current cart items
+      let updatedCart = user.cart as Array<{ itemid: number; itemcount: number }>;
+  
+      // Filter out items with itemids that are in the itemIds array
+      updatedCart = updatedCart.filter(item => !itemIds.includes(item.itemid));
+  
+      // Update the user's cart in the database
+      return prisma.user.update({
+        where: { id },
+        data: {
+          cart: updatedCart,
+        },
+      });
+    } else {
+      // No cart exists or invalid user
+      return null;
+    }
+  }
+
+
   async updatecart(id: number,  itemid: number, itemcount: number ) {
     
     const product = await prisma.item.findUnique({
